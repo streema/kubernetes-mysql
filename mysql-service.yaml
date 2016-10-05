@@ -5,9 +5,12 @@ metadata:
     name: mysql
   name: mysql
 spec:
+  type: LoadBalancer
   ports:
     # The port that this service should serve on.
-    - port: 3306
+      - name: mysql
+        port: 3306
+        targetPort: 3306
   # Label keys and values that must match in order to receive traffic for this service.
   selector:
     name: mysql
