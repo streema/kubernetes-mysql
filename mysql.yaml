@@ -1,31 +1,36 @@
-apiVersion: v1
-kind: Pod
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   name: mysql
-  labels:
-    name: mysql
+  namespace: mysql
 spec:
-  containers:
-    - resources:
-        limits:
-          cpu: 0.5
-      image: mysql:5.6
-      name: mysql
-      env:
-        - name: MYSQL_ROOT_PASSWORD
-          # Change this password!
-          value: root
-      ports:
-        - containerPort: 3306
-          name: mysql
-      volumeMounts:
-          # This name must match the volumes.name below.
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-  volumes:
-  - name: mysql-persistent-storage
-    # This AWS EBS volume must already exist.
-    awsElasticBlockStore:
-    # Put AWS EBS volume ID here
-      volumeID: vol-id
-      fsType: ext4
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: mysql
+      spec:
+        containers:
+          - resources:
+            image: mysql:5.6
+            name: mysql
+            env:
+              - name: MYSQL_ROOT_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: db-password
+                    key: password
+            ports:
+              - containerPort: 3306
+                name: mysql
+            volumeMounts:
+              # This name must match the volumes.name below.
+              - name: mysql-persistent-storage
+                mountPath: /var/lib/mysql
+        volumes:
+          - name: mysql-persistent-storage
+            # This AWS EBS volume must already exist.
+            awsElasticBlockStore:
+            # Put AWS EBS volume ID here
+              volumeID: vol-XXXXX
+              fsType: ext4

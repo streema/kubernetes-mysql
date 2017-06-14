@@ -6,6 +6,15 @@
 
 * Insert the volume id of your newly created ebs volume into your mysql.yaml
 
+#### Create k8s secret
+
+##### create password file
+`echo This-is-a-password > password`
+
+##### create k8s secret for root password
+`kubectl -n mysql create secret generic db-password --from-file=./password`
+
+
 #### Create mysql pod
 
 `kubectl create -f mysql.yaml`
