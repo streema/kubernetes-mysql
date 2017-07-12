@@ -15,18 +15,18 @@
 `kubectl -n mysql create secret generic db-password --from-file=./password`
 
 
-#### Create mysql pod
+#### Create mysql deployment
 
 `kubectl create -f mysql.yaml`
 
 Make sure mysql pod is running
 
-`kubectl get pod mysql`
+`kubectl -n mysql get pod`
 
 #### Create mysql service
 
 `kubectl create -f mysql-service.yaml`
 
-Get internal Cluster-IP for the mysql service
+Get the ELB IP address for the mysql service
 
-`kubectl get service mysql`
+`kubectl -n mysql get service mysql`
